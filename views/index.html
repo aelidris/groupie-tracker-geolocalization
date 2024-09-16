@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/style.css">
+
+    <title>Hello Man!</title>
+</head>
+
+<body>
+    <!-- <h1>Hello L3achran!</h1> -->
+    <div class="container">
+  
+        {{range .}}
+            
+            <div class="box"> 
+            
+                <a href="/artist/{{.ID}}" class="artist-link">
+
+                    <p>
+                        <b>{{.Name}}</b>
+                    </p>
+
+                    <p><img src="{{.Image}}" alt="image" ></p>
+
+                    <p>
+                        <b>Creation date:</b> {{.CreationDate}}<br>
+                    </p> 
+        
+            </div>
+  
+        {{end}}
+     
+
+    </div>
+
+</body>
+
+</html>
