@@ -44,7 +44,7 @@ func ArtistPage(w http.ResponseWriter, r *http.Request) {
 	artistURL := fmt.Sprintf("https://groupietrackers.herokuapp.com/api/artists/%s", artistID)
 	resp, err := http.Get(artistURL)
 	if err != nil {
-		http.Error(w, "Error fetching artist data", http.StatusInternalServerError)
+		renderErrorPage(w, http.StatusInternalServerError, "Error fetching artist data")
 		return
 	}
 	defer resp.Body.Close()
@@ -53,7 +53,7 @@ func ArtistPage(w http.ResponseWriter, r *http.Request) {
 	var artist Artist
 	err = json.NewDecoder(resp.Body).Decode(&artist)
 	if err != nil {
-		http.Error(w, "Error decoding artist data", http.StatusInternalServerError)
+		renderErrorPage(w, http.StatusInternalServerError, "Error decoding artist data")
 		return
 	}
 
@@ -61,7 +61,7 @@ func ArtistPage(w http.ResponseWriter, r *http.Request) {
 	locationURL := fmt.Sprintf("https://groupietrackers.herokuapp.com/api/locations/%s", artistID)
 	locationResp, err := http.Get(locationURL)
 	if err != nil {
-		http.Error(w, "Error fetching location data", http.StatusInternalServerError)
+		renderErrorPage(w, http.StatusInternalServerError, "Error fetching location data")
 		return
 	}
 	defer locationResp.Body.Close()
@@ -78,7 +78,7 @@ func ArtistPage(w http.ResponseWriter, r *http.Request) {
 	dateURL := fmt.Sprintf("https://groupietrackers.herokuapp.com/api/dates/%s", artistID)
 	dateResp, err := http.Get(dateURL)
 	if err != nil {
-		http.Error(w, "Error fetching date data", http.StatusInternalServerError)
+		renderErrorPage(w, http.StatusInternalServerError, "Error fetching date data")
 		return
 	}
 	defer dateResp.Body.Close()
@@ -87,7 +87,7 @@ func ArtistPage(w http.ResponseWriter, r *http.Request) {
 	var date Date
 	err = json.NewDecoder(dateResp.Body).Decode(&date)
 	if err != nil {
-		http.Error(w, "Error decoding date data", http.StatusInternalServerError)
+		renderErrorPage(w, http.StatusInternalServerError, "Error decoding date data")
 		return
 	}
 
@@ -96,7 +96,7 @@ func ArtistPage(w http.ResponseWriter, r *http.Request) {
 	for _, loc := range location.Locations {
 		lat, lng, err := getCoordinates(loc)
 		if err != nil {
-			http.Error(w, fmt.Sprintf("Error fetching coordinates for %s: %v", loc, err), http.StatusInternalServerError)
+			renderErrorPage(w, http.StatusInternalServerError, "Error fetching coordinates")
 			return
 		}
 		latLngs = append(latLngs, LatLng{Latitude: lat, Longitude: lng})
@@ -113,7 +113,7 @@ func ArtistPage(w http.ResponseWriter, r *http.Request) {
 	// Convert locationData to JSON format
 	locationDataJSON, err := json.Marshal(locationData)
 	if err != nil {
-		http.Error(w, "Error converting location data to JSON", http.StatusInternalServerError)
+		renderErrorPage(w, http.StatusInternalServerError, "Error converting location data to JSON")
 		return
 	}
 
@@ -130,7 +130,7 @@ func ArtistPage(w http.ResponseWriter, r *http.Request) {
 	var relation Relation
 	err = json.NewDecoder(relationResp.Body).Decode(&relation)
 	if err != nil {
-		http.Error(w, "Error decoding relation data", http.StatusInternalServerError)
+		renderErrorPage(w, http.StatusInternalServerError, "Error decoding relation data")
 		return
 	}
 	// Pass all the required data to the template
@@ -138,8 +138,8 @@ func ArtistPage(w http.ResponseWriter, r *http.Request) {
 		Artist:       artist,
 		Location:     location,
 		LocationData: string(locationDataJSON), // Pass JSON formatted data as string
-		Date:         date,  
-		Relation:     relation,  // Add the relation data to the struct
+		Date:         date,
+		Relation:     relation, // Add the relation data to the struct
 	}
 
 	// Parse the template
