@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 )
 
 type Artist struct {
@@ -13,12 +14,6 @@ type Artist struct {
 	Image   string   `json:"image"`
 	Members []string `json:"members"`
 }
-
-// type Location struct {
-// 	ID        int      `json:"id"`
-// 	Locations []string `json:"locations"`
-// 	DatesURL  string   `json:"dates"`
-// }
 
 type Location struct {
 	ID        int      `json:"id"`
@@ -157,21 +152,54 @@ func ArtistPage(w http.ResponseWriter, r *http.Request) {
 		latLngs = append(latLngs, LatLng{Latitude: lat, Longitude: lng})
 	}
 
-	// Use the fetched coordinates to generate a map URL
-	mapURL := generateMapURL(latLngs)
+	// Prepare the location data to pass to JavaScript
+	locationData := "["
+	for _, latLng := range latLngs {
+		locationData += fmt.Sprintf("{lat: %f, lng: %f},", latLng.Latitude, latLng.Longitude)
+	}
+	locationData = strings.TrimRight(locationData, ",") + "]"
 
-	// Display the map and artist information in HTML
+	// Render the HTML with Leaflet map integration
 	fmt.Fprintf(w, `<html>
-		<head><title>%s's Concert Locations</title></head>
+		<head>
+			<title>%s's Concert Locations</title>
+			<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+			<style>
+				#map { height: 500px; width: 100%%; }
+			</style>
+		</head>
 		<body>
 			<h1>%s</h1>
-			<img src="%s" alt="Concert Locations Map">
 			<h2>Members:</h2>
-			<ul>`, artist.Name, artist.Name, mapURL)
+			<ul>`, artist.Name, artist.Name)
 	for _, member := range artist.Members {
 		fmt.Fprintf(w, "<li>%s</li>", member)
 	}
-	fmt.Fprintf(w, `</ul></body></html>`)
+	fmt.Fprintf(w, `</ul>
+			<h2>Concert Locations:</h2>
+			<div id="map"></div>
+
+			<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+			<script>
+				var map = L.map('map').setView([0, 0], 2);  // Initialize the map
+
+				L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+					maxZoom: 18,
+					attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+				}).addTo(map);
+
+				// Add markers to the map
+				var locations = %s;
+				locations.forEach(function(location) {
+					L.marker([location.lat, location.lng]).addTo(map);
+				});
+
+				// Adjust the map view to fit all markers
+				var bounds = L.latLngBounds(locations.map(loc => [loc.lat, loc.lng]));
+				map.fitBounds(bounds);
+			</script>
+		</body>
+		</html>`, locationData)
 }
 
 func generateMapURL(latLngs []LatLng) string {
