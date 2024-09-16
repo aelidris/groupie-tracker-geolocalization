@@ -14,9 +14,9 @@ const (
 
 func main() {
 	fmt.Println("http://localhost:3040")
-	Music.GetApi(api)
 	http.HandleFunc("/public/", Music.SetupStaticFilesHandlers)
-	http.HandleFunc("/", Music.GetArtists)
+	http.HandleFunc("/", Music.HomePage)
+	http.HandleFunc("/artist", Music.ArtistPage)
 	err := http.ListenAndServe(":3040", nil)
 	if err != nil {
 		log.Fatal(err)

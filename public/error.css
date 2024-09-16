@@ -1,0 +1,60 @@
+/* General body styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Centered body styling for the error page */
+.centredBody {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Error title and message */
+#err {
+    margin: 10px 0;
+}
+
+#err:first-child {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+#err:last-child {
+    font-size: 1.5rem;
+}
+
+/* Styling the return button */
+button {
+    background-color: #d9534f;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #c9302c;
+}
+
+/* For consistent text formatting */
+h1, h2 {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}

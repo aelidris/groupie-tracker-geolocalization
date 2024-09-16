@@ -3,110 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/public/style.css">
-
-    <title>Hello Man!</title>
-
-     <!-- Leaflet CSS -->
-     <link
-     rel="stylesheet"
-     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-   />
-
-   <!-- Leaflet JavaScript -->
-   <script
-     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-   ></script>
+    <title>{{.Artist.Name}}</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="/public/artist.css">
 
 </head>
-
 <body>
-
-    <div id="my-map" style="height: 500px;"></div>
-
-    <script>
-      // Initialize the map and set its view to a default location and zoom level
-      var map = L.map('my-map').setView([20.0, 0.0], 2); // Default center [Lat, Lon] and zoom level
-
-      // Use the Geoapify Tile API to load the map tiles
-      var apiKey = '{{.APIKey}}'; // API key dynamically passed from Go
-
-      // Geoapify Tile URL
-      var tileUrl = `https://maps.geoapify.com/v1/tile/osm-bright/{z}/{x}/{y}.png?apiKey=${apiKey}`;
-      
-      // Add the tiles to the map
-      L.tileLayer(tileUrl, {
-        maxZoom: 18,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(map);
-
-      // Array of coordinates [latitude, longitude] to display on the map, passed dynamically from Go
-      var locations = {{.Loca}};
-
-      // Loop through each location and add a marker on the map
-      locations.forEach(function (coord) {
-        L.marker(coord).addTo(map).bindPopup(`Latitude: ${coord[0]}, Longitude: ${coord[1]}`);
-      });
-
-      // Automatically fit the map bounds to include all markers
-      var bounds = L.latLngBounds(locations);
-      map.fitBounds(bounds);
-    </script>
-
-<div class="image-section">
-    <img src="{{.Image}}" alt="Image of {{.Name}}">
-</div>
-
-<div class="artistContainer"> 
     
-    <div class="artist-section">
-        <p><b>Name:</b> {{.Name}}</p><br>
-        <b>Members:</b>
-        <ul>
-            {{range .Members}}
-                <li><span>{{.}}</span></li>
-            {{end}}
-        </ul>
-        <p><b>Creation Date:</b> {{.CreationDate}}</p>
-        <p><b>First Album:</b> {{.FirstAlbum}}</p>
-    </div>
+    
 
-    <div class="artist-section">
-        <b>Locations:</b>
-        <ul>
-            {{range .Location.Locations}}
-                <li><span>{{.}}</span></li>
-            {{end}}
-        </ul>    
-        <b>Dates:</b>
-        <ul>
-            {{range .Date.Dates}}
-                <li><span>{{.}}</span></li>
-            {{end}}
-        </ul>    
+    <div class="image-section">
+        <img src="{{.Artist.Image}}" alt="Image of {{.Artist.Name}}">
     </div>
-
-    <div class="artist-section">
-        <b>Concert locations and dates:</b><br>
-        {{range $location, $dates := .DatesLocations}}
-            <b>{{$location}}</b>
+    
+    <div class="artistContainer"> 
+        
+        <div class="artist-section">
+            <p><b>Name:</b> {{.Artist.Name}}</p><br>
+            <b>Members:</b>
             <ul>
-                {{range $dates}}
-                    <li>{{.}}</li>
+                {{range .Artist.Members}}
+                    <li><span>{{.}}</span></li>
                 {{end}}
-            </ul> 
-        {{end}}
+            </ul>
+            <p><b>Creation Date:</b> {{.Artist.CreationDate}}</p>
+            <p><b>First Album:</b> {{.Artist.FirstAlbum}}</p>
+        </div>
+    
+        <div class="artist-section">
+            <b>Locations:</b>
+            <ul>
+                {{range .Location.Locations}}
+                    <li><span>{{.}}</span></li>
+                {{end}}
+            </ul>    
+            <b>Dates:</b>
+            <ul>
+                {{range .Date.Dates}}
+                    <li><span>{{.}}</span></li>
+                {{end}}
+            </ul>    
+        </div>
+    
+        <div class="artist-section">
+            <b>Concert locations and dates:</b><br>
+            {{range $location, $dates := .Relation.DatesLocations}}
+                <b>{{$location}}</b>
+                <ul>
+                    {{range $dates}}
+                        <li>{{.}}</li>
+                    {{end}}
+                </ul> 
+            {{end}}
+        </div>
     </div>
-</div>
+    
+    
+    <!-- Move the form section here to the bottom of the container -->
+    <div class="button-section">
+        <form action="/" method="GET">
+            <button type="submit">Return To Home</button>
+        </form>
+    </div>
 
+    <!-- :::::::::::::::::: -->
+    <h2>Concert Locations:</h2>
+    <div id="map"></div>
 
-<!-- Move the form section here to the bottom of the container -->
-<div class="button-section">
-    <form action="/" method="GET">
-        <button type="submit">Return To Home</button>
-    </form>
-</div>
-
+    <!-- Leaflet Map Library -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    
+    <script>
+        // Parse the location data passed from the server
+        var locations = JSON.parse('{{.LocationData}}');
+    
+        var map = L.map('map').setView([0, 0], 2);  // Initialize the map
+    
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+    
+        // Add markers to the map
+        locations.forEach(function(location) {
+            L.marker([location.lat, location.lng]).addTo(map);
+        });
+    
+        // Adjust the map view to fit all markers
+        var bounds = L.latLngBounds(locations.map(loc => [loc.lat, loc.lng]));
+        map.fitBounds(bounds);
+    </script>
+    
+    <!-- ::::::::::: -->
 </body>
-
 </html>

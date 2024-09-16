@@ -1,0 +1,98 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 1rem;
+}
+
+/* Map Section */
+#map {
+    height: 500px;
+    width: 100%;
+    margin: 2rem auto;
+    max-width: 900px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Image Section */
+.image-section {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.image-section img {
+    max-width: 300px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Artist Info Container */
+.artistContainer {
+    background-color: #fff;
+    padding: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.artist-section {
+    margin-bottom: 2rem;
+}
+
+.artist-section b {
+    color: #2c3e50;
+    font-size: 1.1rem;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    background-color: #f9f9f9;
+    margin-bottom: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.artist-section p {
+    font-size: 1rem;
+    color: #666;
+}
+
+.artist-section span {
+    color: #2980b9;
+}
+
+/* Button Section */
+.button-section {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.button-section button {
+    background-color: #2980b9;
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-section button:hover {
+    background-color: #3498db;
+}
