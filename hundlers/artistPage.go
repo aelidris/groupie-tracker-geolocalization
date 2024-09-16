@@ -70,7 +70,7 @@ func ArtistPage(w http.ResponseWriter, r *http.Request) {
 	var location Location
 	err = json.NewDecoder(locationResp.Body).Decode(&location)
 	if err != nil {
-		http.Error(w, "Error decoding location data", http.StatusInternalServerError)
+		renderErrorPage(w, http.StatusNotFound, "Page Not Found")
 		return
 	}
 
