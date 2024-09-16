@@ -6,7 +6,7 @@ import (
 )
 
 func renderErrorPage(w http.ResponseWriter, statusCode int, message string) {
-	//w.WriteHeader(statusCode)
+	w.WriteHeader(statusCode)
 	errorData := ErrorData{
 		StatusCode: statusCode,
 		Message:    message,

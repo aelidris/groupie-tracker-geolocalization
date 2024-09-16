@@ -7,6 +7,10 @@ import (
 
 // HomePage displays a welcome message and a list of artists
 func HomePage(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		renderErrorPage(w, http.StatusNotFound, "Page Not Found")
+		return
+	}
 	artists, err := FetchArtists()
 	if err != nil {
 		http.Error(w, "Failed to load artists", http.StatusInternalServerError)
@@ -24,12 +28,4 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 		renderErrorPage(w, http.StatusInternalServerError, "Internal Server Error")
 		return
 	}
-
-	// // Display the homepage with links to artist pages
-	// fmt.Fprintf(w, "<h1>Welcome to Groupie Trackers</h1>")
-	// fmt.Fprintf(w, "<h2>Artists List</h2><ul>")
-	// for _, artist := range artists {
-	// 	fmt.Fprintf(w, `<li><a href="/artist?id=%d">%s</a></li>`, artist.ID, artist.Name)
-	// }
-	// fmt.Fprintf(w, "</ul>")
 }
