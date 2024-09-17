@@ -13,7 +13,7 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 	}
 	artists, err := FetchArtists()
 	if err != nil {
-		http.Error(w, "Failed to load artists", http.StatusInternalServerError)
+		renderErrorPage(w, http.StatusInternalServerError, "Failed to load artists")
 		return
 	}
 
