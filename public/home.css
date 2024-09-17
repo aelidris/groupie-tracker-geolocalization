@@ -11,6 +11,25 @@ body {
     height: 100vh;
 }
 
+/* Alternative styling for the main heading */
+h1 {
+    font-size: 2.8em;
+    text-align: center;
+    color: #2c3e50;
+    margin: 20px 0;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 4px solid #3498db;
+    padding-bottom: 10px;
+}
+/* Media query for devices with width <= 432px */
+@media (max-width: 432px) {
+    h1 {
+        font-size: 1.8em; /* Adjust the font size */
+    }
+}
+
 h2 {
     font-size: 2em;
     text-align: center;
@@ -21,10 +40,10 @@ h2 {
 .container {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 10px;
     justify-content: center;
     padding: 20px;
-    max-width: 1200px;
+    width: auto;
 }
 
 /* Box styling for each artist card */
