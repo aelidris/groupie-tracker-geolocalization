@@ -10,7 +10,7 @@ body {
 h2 {
     text-align: center;
     color: #2c3e50;
-    margin-top: 1rem;
+    margin-top: 1rem; /* Adds a margin of 1 rem (typically 16px) above the element */
 }
 
 /* Map Section */
